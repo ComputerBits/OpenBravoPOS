@@ -520,10 +520,22 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         return (Integer) s.DB.getSequenceSentence(s, "TICKETSNUM_PAYMENT").find();
     }
 
+    public final SentenceFind getProductImage() {
+        return new PreparedSentence(s,
+            "SELECT IMAGE FROM PRODUCTS WHERE ID = ?",
+            SerializerWriteString.INSTANCE,
+            new SerializerRead() {
+                @Override
+                public Object readValues(DataRead dr) throws BasicException {
+                    return ImageUtils.readImage(dr.getBytes(1));
+                }
+            });
+    }
+
     public final SentenceList getProductCatQBF() {
         return new StaticSentence(s
             , new QBFBuilder(
-                "SELECT DISTINCT PRODUCTS.ID, PRODUCTS.REFERENCE, PRODUCTS.CODE, PRODUCTS.NAME, PRODUCTS.ISCOM, PRODUCTS.ISSCALE, PRODUCTS.PRICEBUY, PRODUCTS.PRICESELL, PRODUCTS.CATEGORY, PRODUCTS.TAXCAT, PRODUCTS.ATTRIBUTESET_ID, PRODUCTS.IMAGE, PRODUCTS.STOCKCOST, PRODUCTS.STOCKVOLUME, CASE WHEN C.PRODUCT IS NULL THEN " + s.DB.FALSE() + " ELSE " + s.DB.TRUE() + " END, C.CATORDER, PRODUCTS.ATTRIBUTES " +
+                "SELECT DISTINCT PRODUCTS.ID, PRODUCTS.REFERENCE, PRODUCTS.CODE, PRODUCTS.NAME, PRODUCTS.ISCOM, PRODUCTS.ISSCALE, PRODUCTS.PRICEBUY, PRODUCTS.PRICESELL, PRODUCTS.CATEGORY, PRODUCTS.TAXCAT, PRODUCTS.ATTRIBUTESET_ID, " + s.DB.CHAR_NULL() + ", PRODUCTS.STOCKCOST, PRODUCTS.STOCKVOLUME, CASE WHEN C.PRODUCT IS NULL THEN " + s.DB.FALSE() + " ELSE " + s.DB.TRUE() + " END, C.CATORDER, PRODUCTS.ATTRIBUTES " +
                 "FROM PRODUCTS, PRODUCTS_CAT C, BARCODE_TABLE " +
                 "WHERE ?(QBF_FILTER) AND PRODUCTS.ID = C.PRODUCT " +
                 "ORDER BY PRODUCTS.REFERENCE", new String[] {"PRODUCTS.NAME", "PRODUCTS.PRICEBUY", "PRODUCTS.PRICESELL", "PRODUCTS.CATEGORY", "PRODUCTS.CODE"})
