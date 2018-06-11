@@ -107,8 +107,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     }
     public final ProductInfoExt getProductInfoByCode(String sCode) throws BasicException {
         return (ProductInfoExt) new PreparedSentence(s
-            , "SELECT ID, REFERENCE, CODE, NAME, ISCOM, ISSCALE, PRICEBUY, PRICESELL, TAXCAT, CATEGORY, ATTRIBUTESET_ID, IMAGE, ATTRIBUTES " +
-              "FROM PRODUCTS WHERE CODE = ?"
+            , "SELECT ID, REFERENCE, PRODUCTS.CODE, NAME, ISCOM, ISSCALE, PRICEBUY, PRICESELL, TAXCAT, CATEGORY, ATTRIBUTESET_ID, IMAGE, ATTRIBUTES " +
+              "FROM PRODUCTS, BARCODE_TABLE WHERE (PRODUCTS.ID = BARCODE_TABLE.PID AND BARCODE_TABLE.CODE = ?) OR PRODUCTS.CODE = '" + sCode + "'"
             , SerializerWriteString.INSTANCE
             , ProductInfoExt.getSerializerRead()).find(sCode);
     }
@@ -522,10 +522,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceList getProductCatQBF() {
         return new StaticSentence(s
             , new QBFBuilder(
-                "SELECT P.ID, P.REFERENCE, P.CODE, P.NAME, P.ISCOM, P.ISSCALE, P.PRICEBUY, P.PRICESELL, P.CATEGORY, P.TAXCAT, P.ATTRIBUTESET_ID, P.IMAGE, P.STOCKCOST, P.STOCKVOLUME, CASE WHEN C.PRODUCT IS NULL THEN " + s.DB.FALSE() + " ELSE " + s.DB.TRUE() + " END, C.CATORDER, P.ATTRIBUTES " +
-                "FROM PRODUCTS P LEFT OUTER JOIN PRODUCTS_CAT C ON P.ID = C.PRODUCT " +
-                "WHERE ?(QBF_FILTER) " +
-                "ORDER BY P.REFERENCE", new String[] {"P.NAME", "P.PRICEBUY", "P.PRICESELL", "P.CATEGORY", "P.CODE"})
+                "SELECT DISTINCT PRODUCTS.ID, PRODUCTS.REFERENCE, PRODUCTS.CODE, PRODUCTS.NAME, PRODUCTS.ISCOM, PRODUCTS.ISSCALE, PRODUCTS.PRICEBUY, PRODUCTS.PRICESELL, PRODUCTS.CATEGORY, PRODUCTS.TAXCAT, PRODUCTS.ATTRIBUTESET_ID, PRODUCTS.IMAGE, PRODUCTS.STOCKCOST, PRODUCTS.STOCKVOLUME, CASE WHEN C.PRODUCT IS NULL THEN " + s.DB.FALSE() + " ELSE " + s.DB.TRUE() + " END, C.CATORDER, PRODUCTS.ATTRIBUTES " +
+                "FROM PRODUCTS, PRODUCTS_CAT C, BARCODE_TABLE " +
+                "WHERE ?(QBF_FILTER) AND PRODUCTS.ID = C.PRODUCT " +
+                "ORDER BY PRODUCTS.REFERENCE", new String[] {"PRODUCTS.NAME", "PRODUCTS.PRICEBUY", "PRODUCTS.PRICESELL", "PRODUCTS.CATEGORY", "PRODUCTS.CODE"})
             , new SerializerWriteBasic(new Datas[] {Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.DOUBLE, Datas.OBJECT, Datas.DOUBLE, Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.STRING})
             , productsRow.getSerializerRead());
     }
@@ -581,9 +581,13 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 new PreparedSentence(s
                     , "DELETE FROM PRODUCTS_CAT WHERE PRODUCT = ?"
                     , new SerializerWriteBasicExt(productsRow.getDatas(), new int[] {0})).exec(params);
-                return new PreparedSentence(s
+                new PreparedSentence(s
+                    , "DELETE FROM BARCODE_TABLE WHERE PID = ?"
+                    , new SerializerWriteBasicExt(productsRow.getDatas(), new int[] {0})).exec(params);
+                int t = new PreparedSentence(s
                     , "DELETE FROM PRODUCTS WHERE ID = ?"
                     , new SerializerWriteBasicExt(productsRow.getDatas(), new int[] {0})).exec(params);
+                return t;
             }
         };
     }
