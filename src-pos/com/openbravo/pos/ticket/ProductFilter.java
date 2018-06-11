@@ -85,7 +85,7 @@ public class ProductFilter extends javax.swing.JPanel implements ReportEditorCre
                 m_jCboName.getSelectedItem(), m_jName.getText(),
                 m_jCboPriceBuy.getSelectedItem(), Formats.CURRENCY.parseValue(m_jPriceBuy.getText()),           
                 m_jCboPriceSell.getSelectedItem(), Formats.CURRENCY.parseValue(m_jPriceSell.getText()),
-                m_CategoryModel.getSelectedKey() == null ? QBFCompareEnum.COMP_NONE : QBFCompareEnum.ALLCATS, m_CategoryModel.getSelectedKey(),
+                m_CategoryModel.getSelectedKey() == null ? QBFCompareEnum.COMP_NONE : 0, m_CategoryModel.getSelectedKey(),
                 QBFCompareEnum.COMP_NONE, null         
             };
         } else {            
