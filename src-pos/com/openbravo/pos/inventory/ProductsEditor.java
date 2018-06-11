@@ -24,6 +24,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.awt.image.*;
+import java.awt.*;
+import java.awt.event.*;
+
+import com.openbravo.pos.forms.*;
+import com.openbravo.data.loader.*;
+import java.sql.*;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import com.openbravo.pos.forms.AppLocal;
@@ -91,7 +98,6 @@ public class ProductsEditor extends JPanel implements EditorRecord {
         m_jCodetype.setVisible(false);
                
         m_jRef.getDocument().addDocumentListener(dirty);
-        m_jCode.getDocument().addDocumentListener(dirty);
         m_jName.getDocument().addDocumentListener(dirty);
         m_jComment.addActionListener(dirty);
         m_jScale.addActionListener(dirty);
@@ -532,7 +538,20 @@ public class ProductsEditor extends JPanel implements EditorRecord {
             return null;
         }
     }
+
+    public void setBarcodeAndRef(String code){
+        m_jCode.setText(code);
+        m_jRef.setText(code);
+    }
     
+    public String getCode(){
+        return m_jCode.getText();
+    }
+
+    private final void showBarcodeGen(){
+        new BFrame(this);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -548,7 +567,8 @@ public class ProductsEditor extends JPanel implements EditorRecord {
         m_jTitle = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JButton();
+        genCode = new javax.swing.JButton("Generate/Print Code");
         m_jCode = new javax.swing.JTextField();
         m_jImage = new com.openbravo.data.gui.JImageEditor();
         jLabel3 = new javax.swing.JLabel();
@@ -582,6 +602,164 @@ public class ProductsEditor extends JPanel implements EditorRecord {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtAttributes = new javax.swing.JTextArea();
 
+        jLabel6.addActionListener(new ActionListener(){
+            int num = 15;
+            JTextField[]  fields;
+            public void actionPerformed(ActionEvent ae){
+                new JFrame(){
+                    {
+                        fields = new JTextField[num];
+                        JLabel[] labels = new JLabel[num];
+                        JButton submit = new JButton("Submit");
+                        AppConfig config = new AppConfig(new String[0]);
+                        config.load();
+                        try {
+                            Session s = AppViewConnection.createSession(config);
+
+                            setLayout(new GridLayout(num+1,2));
+                            setPreferredSize(new Dimension(230,25*(num+1)));
+                            for(int n = 0; n < num; n++){
+                                fields[n] = new JTextField();
+                                labels[n] = new JLabel(String.valueOf(n+1), JLabel.CENTER);
+                                fields[n].setPreferredSize(new Dimension(200,25));
+                                labels[n].setPreferredSize(new Dimension(30,25));
+                                add(labels[n]);
+                                add(fields[n]);
+                            }
+                            add(new JLabel());
+                            add(submit);
+                            //check product exists in database
+                            String statement = "SELECT * FROM PRODUCTS WHERE PRODUCTS.CODE ='" + m_jCode.getText() + "'";
+                            PreparedStatement ps = s.getConnection().prepareStatement(statement);
+                            ps.execute();
+                            ResultSet rs = ps.getResultSet();
+                            rs.last();
+                            if(rs.getRow() < 1){
+                                javax.swing.JOptionPane.showMessageDialog(null,"Please save product before adding more barcodes");
+                            }
+                            else{
+                                submit.addActionListener(new ActionListener(){
+                                    public void actionPerformed(ActionEvent ae){
+                                        try{
+                                            AppConfig config = new AppConfig(new String[0]);
+                                            config.load();
+
+                                            Session s = AppViewConnection.createSession(config);
+                                            String statement;
+                                            PreparedStatement ps ;
+                                            ResultSet rs ;
+
+                                            //check for duplication attempt
+                                            statement = "SELECT BARCODE_TABLE.Code,PRODUCTS.NAME FROM BARCODE_TABLE, PRODUCTS WHERE BARCODE_TABLE.PID = PRODUCTS.ID AND PRODUCTS.ID != '" + m_id + "'";
+                                            ps = s.getConnection().prepareStatement(statement);
+                                            ps.execute();
+                                            rs = ps.getResultSet();
+
+                                            String code;
+                                            while(rs.next()){
+                                                code = rs.getString(1);
+                                                for(int n = 0; n < num; n++){
+                                                    if(code.equals(fields[n].getText())){
+                                                        javax.swing.JOptionPane.showMessageDialog(null,code + " is a duplicate. It is already assigned to '" + rs.getString(2) + "'");
+                                                        return;
+                                                    }
+                                                }
+                                            }
+                                            //check local codes against products.code
+                                            statement = "SELECT Products.Code,PRODUCTS.NAME FROM PRODUCTS";
+                                            ps = s.getConnection().prepareStatement(statement);
+                                            ps.execute();
+                                            rs = ps.getResultSet();
+
+                                            while(rs.next()){
+                                                code = rs.getString(1);
+                                                for(int n = 0; n < num; n++){
+                                                    if(code.equals(fields[n].getText())){
+                                                        javax.swing.JOptionPane.showMessageDialog(null,code + " is a duplicate. It is already assigned to '" + rs.getString(2) + "'");
+                                                        return;
+                                                    }
+                                                }
+                                            }
+                                            //check for 2 same entries on form
+                                            for(int n = 0; n < num; n++){
+                                                for(int m = 0; m < num; m++){
+                                                    if(n != m && !fields[m].getText().equals("") && fields[m].getText().equals(fields[n].getText())){
+                                                        javax.swing.JOptionPane.showMessageDialog(null,fields[n].getText() + " is a duplicate. It has been entered more than once on this form");
+                                                        return;
+                                                    }
+                                                }
+                                            }
+
+                                            //delete old
+                                            statement = "DELETE FROM BARCODE_TABLE WHERE pid = '" + m_id +"'";
+                                            ps = s.getConnection().prepareStatement(statement);
+                                            ps = s.getConnection().prepareStatement(statement);
+                                            ps.execute();
+
+                                            //insert new
+                                            for(int p = 0; p < num; p++){
+                                                if(!"".equals(fields[p].getText())){
+                                                    statement = "INSERT INTO BARCODE_TABLE (pid, code) VALUES ('" + m_id + "','" + fields[p].getText() + "')";
+                                                    ps = s.getConnection().prepareStatement(statement);
+                                                    ps.execute();
+                                                }
+                                            }
+                                        } catch(Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        hid();
+                                    }
+                                });
+
+                                statement = "SELECT barcode_table.code FROM barcode_table,products WHERE barcode_table.pid = products.ID AND products.ID = '" + m_id + "'";
+
+                                ps = s.getConnection().prepareStatement(statement);
+                                ps.execute();
+
+                                rs = ps.getResultSet();
+
+                                int count = 0;
+                                while(rs.next()){
+                                    if(count > num-1 ){
+                                        break;
+                                    }
+                                    fields[count++].setText(rs.getString(1));
+                                }
+
+                                pack();
+                                setLocationRelativeTo(null);
+                                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                setVisible(true);
+                            }
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    public void hid(){
+                        setVisible(false);
+                    }
+                };
+            }
+        });
+
+		genCode.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				showBarcodeGen();
+			}
+		});
+
+		m_jCode.addKeyListener(new KeyListener(){
+			public void keyPressed(KeyEvent ke){
+			}
+			public void keyReleased(KeyEvent ke){
+			}
+			public void keyTyped(KeyEvent ke){
+				if(m_jCode.getText().length() == 13){
+					m_jRef.setText(m_jCode.getText());
+				}
+			}
+		});
+
         setLayout(null);
 
         jLabel1.setText(AppLocal.getIntString("label.prodref")); // NOI18N
@@ -602,9 +780,11 @@ public class ProductsEditor extends JPanel implements EditorRecord {
 
         jPanel1.setLayout(null);
 
-        jLabel6.setText(AppLocal.getIntString("label.prodbarcode")); // NOI18N
+        jLabel6.setText("Barcodes"); // NOI18N
         jPanel1.add(jLabel6);
-        jLabel6.setBounds(10, 20, 150, 15);
+        jPanel1.add(genCode);
+        genCode.setBounds(85, 20, 75, 25);
+        jLabel6.setBounds(10, 20, 75, 25);
         jPanel1.add(m_jCode);
         m_jCode.setBounds(160, 20, 170, 19);
         jPanel1.add(m_jImage);
@@ -750,7 +930,8 @@ public class ProductsEditor extends JPanel implements EditorRecord {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JButton jLabel6;
+    private javax.swing.JButton genCode;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -763,6 +944,7 @@ public class ProductsEditor extends JPanel implements EditorRecord {
     private javax.swing.JTextField m_jCatalogOrder;
     private javax.swing.JComboBox m_jCategory;
     private javax.swing.JTextField m_jCode;
+    private javax.swing.JFrame m_jCodeFrame;
     private javax.swing.JComboBox m_jCodetype;
     private javax.swing.JCheckBox m_jComment;
     private com.openbravo.data.gui.JImageEditor m_jImage;

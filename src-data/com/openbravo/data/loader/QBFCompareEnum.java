@@ -37,6 +37,10 @@ public abstract class QBFCompareEnum {
     public final static QBFCompareEnum COMP_RE = new QBFCompareEnum(3, "qbf.re") {
         public String getExpression(String sField, String sSQLValue) { return sField + " LIKE " + sSQLValue; }
     };
+    public final static QBFCompareEnum COMP_BLOOKUP = new QBFCompareEnum(9, "qbf.blookup") {
+        public String getExpression(String sField, String sSQLValue) { return sField + " LIKE " + sSQLValue +
+            " OR (BARCODE_TABLE.PID = PRODUCTS.ID AND BARCODE_TABLE.CODE LIKE " + sSQLValue +")";}
+    };
     public final static QBFCompareEnum COMP_EQUALS = new QBFCompareEnum(3, "qbf.equals") {
         public String getExpression(String sField, String sSQLValue) { return sField + " = " + sSQLValue; }
     };
