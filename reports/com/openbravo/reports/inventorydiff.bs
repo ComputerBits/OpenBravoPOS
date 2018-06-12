@@ -45,6 +45,12 @@ report.addParameter("LOCATIONS.ID");
 report.addQBFFilter(new com.openbravo.pos.reports.JParamsLocationWithFirst());
 report.addParameter("STOCKDIARY.REASON");
 report.addQBFFilter(new com.openbravo.pos.reports.JParamsReason());
+report.addParameter("PRODUCTS.NAME");
+report.addParameter("PRODUCTS.PRICEBUY");
+report.addParameter("PRODUCTS.PRICESELL");
+report.addParameter("PRODUCTS.CATEGORY");
+report.addParameter("PRODUCTS.CODE");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter());
 
 report.addField("LOCATIONID", com.openbravo.data.loader.Datas.STRING);
 report.addField("LOCATIONNAME", com.openbravo.data.loader.Datas.STRING);
@@ -60,4 +66,3 @@ report.addField("UNITSDIFF", com.openbravo.data.loader.Datas.DOUBLE);
 report.addField("TOTALDIFF", com.openbravo.data.loader.Datas.DOUBLE);
 
 report;
-

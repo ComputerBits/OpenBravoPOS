@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ticketsample" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<subDataset name="dataset1"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<field name="TICKET" class="com.openbravo.pos.ticket.TicketInfo"/>
+	<field name="PLACE" class="java.lang.String"/>
+	<field name="TAXESLOGIC" class="java.lang.Object"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="117">
+			<image>
+				<reportElement key="image-1" x="68" y="0" width="460" height="96"/>
+				<imageExpression class="java.lang.String"><![CDATA["reports/com/openbravo/reports/logo.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="97" y="81" width="85" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="145" y="81" width="85" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[0333 101 0065]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="81" width="85" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[info@cbits.co.uk]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="78" y="54" width="384" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Market Place, Chapel-en-le-Frith, High Peak. Derbyshire SK23 0EN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="245" y="99" width="62" height="18"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="81" width="85" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[www.cbits.co.uk]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band height="170">
+			<rectangle>
+				<reportElement key="rectangle-1" x="235" y="9" width="292" height="75"/>
+			</rectangle>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="343" y="12" width="156" height="21"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKET}.printId()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-3" x="245" y="12" width="98" height="21"/>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Receipt]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement key="rectangle-2" x="9" y="9" width="216" height="75"/>
+			</rectangle>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-4" x="25" y="13" width="188" height="17">
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{TICKET}.getCustomer().getFirstname() ==null ? "" : $F{TICKET}.getCustomer().getFirstname() + " ") + $F{TICKET}.getCustomer().getName()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-5" x="25" y="29" width="188" height="17">
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKET}.getCustomer().getAddress()]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="false">
+				<reportElement key="subreport-1" x="10" y="91" width="517" height="69"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(
+$F{TICKET}.getLines()
+)]]></dataSourceExpression>
+				<subreportExpression class="net.sf.jasperreports.engine.JasperReport"><![CDATA[JasperCompileManager.compileReport(
+net.sf.jasperreports.engine.xml.JRXmlLoader.load(getClass().getResourceAsStream(
+"/com/openbravo/reports/invoiceWithNotes_lines.jrxml"
+))
+)]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-5" x="25" y="45" width="188" height="17">
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKET}.getCustomer().getCity() == null ? "" : $F{TICKET}.getCustomer().getCity()]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-5" x="25" y="62" width="188" height="17">
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKET}.getCustomer().getPostal() == null ? "" : $F{TICKET}.getCustomer().getPostal()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-4" x="245" y="33" width="98" height="21"/>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-3" x="343" y="33" width="156" height="21"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKET}.printDate()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="245" y="54" width="98" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VAT Reg No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="343" y="52" width="156" height="20"/>
+				<textElement/>
+				<text><![CDATA[GB 824 989869]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="101">
+			<rectangle>
+				<reportElement key="rectangle-3" x="9" y="10" width="517" height="82"/>
+			</rectangle>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-6" x="323" y="42" width="188" height="19"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKET}.printTax()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-7" x="323" y="61" width="188" height="19"/>
+				<textElement textAlignment="Right">
+					<font size="15" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKET}.printTotal()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-8" x="323" y="23" width="188" height="19"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKET}.printSubTotal()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-6" x="266" y="23" width="57" height="19"/>
+				<textElement>
+					<font isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Subtotal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" x="266" y="42" width="57" height="19"/>
+				<textElement>
+					<font isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Total Tax]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-9" x="266" y="61" width="57" height="19"/>
+				<textElement>
+					<font size="15" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-8" x="117" y="23" width="96" height="19">
+					<printWhenExpression><![CDATA[new Boolean($F{TICKET}.getPayments().size() >0)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[((com.openbravo.pos.payment.PaymentInfo)($F{TICKET}.getPayments().get(0))).getName().equals("debt") ? "COD" : ((com.openbravo.pos.payment.PaymentInfo)($F{TICKET}.getPayments().get(0))).getName()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-6" x="33" y="23" width="84" height="19"/>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Payment Method]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" x="33" y="42" width="54" height="19">
+					<printWhenExpression><![CDATA[new Boolean($F{TICKET}.getProperty("message",null) != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Message]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-8" x="87" y="42" width="126" height="38">
+					<printWhenExpression><![CDATA[new Boolean($F{TICKET}.getProperty("message",null) != null)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKET}.getProperty("message")]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

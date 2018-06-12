@@ -19,13 +19,13 @@
 
 report = new com.openbravo.pos.reports.PanelReportBean();
 
-report.setTitleKey("Menu.Products");
-report.setReport("/com/openbravo/reports/products");
-report.setResourceBundle("com/openbravo/reports/products_messages");
+report.setTitleKey("Menu.Barcodes");
+report.setReport("/com/openbravo/reports/barcodes");
+report.setResourceBundle("com/openbravo/reports/barcodes_messages");
 
-report.setSentence("SELECT DISTINCT PRODUCTS.ID, PRODUCTS.REFERENCE, PRODUCTS.CODE, PRODUCTS.NAME, PRODUCTS.PRICEBUY, PRODUCTS.PRICESELL, TC.ID AS TAXCAT, TC.NAME AS TAXCATNAME, CATEGORIES.ID AS CATEGORY, CATEGORIES.NAME AS CATEGORYNAME " +
-                 "FROM PRODUCTS , CATEGORIES ,TAXCATEGORIES TC, BARCODE_TABLE " +
-                 "WHERE ?(QBF_FILTER) AND PRODUCTS.CATEGORY = CATEGORIES.ID AND PRODUCTS.TAXCAT = TC.ID " +
+report.setSentence("SELECT PRODUCTS.ID, PRODUCTS.REFERENCE, PRODUCTS.CODE, PRODUCTS.NAME, PRODUCTS.PRICEBUY, PRODUCTS.PRICESELL, TC.ID AS TAXCAT, TC.NAME AS TAXCATNAME, CATEGORIES.ID AS CATEGORY, CATEGORIES.NAME AS CATEGORYNAME " +
+                 "FROM PRODUCTS LEFT OUTER JOIN CATEGORIES ON PRODUCTS.CATEGORY = CATEGORIES.ID LEFT OUTER JOIN TAXCATEGORIES TC ON PRODUCTS.TAXCAT = TC.ID " +
+                 "WHERE ?(QBF_FILTER) " +
                  "ORDER BY CATEGORIES.NAME, PRODUCTS.NAME");
 report.addParameter("PRODUCTS.NAME");
 report.addParameter("PRODUCTS.PRICEBUY");

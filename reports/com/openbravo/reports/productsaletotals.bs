@@ -20,25 +20,25 @@
 report = new com.openbravo.pos.reports.PanelReportBean();
 
 report.setTitleKey("Menu.ClosedProducts");
-report.setReport("/com/openbravo/reports/closedproducts");
-report.setResourceBundle("com/openbravo/reports/closedproducts_messages");
+report.setReport("/com/openbravo/reports/soldproducts");
+report.setResourceBundle("com/openbravo/reports/soldproducts_messages");
 
 report.setSentence("SELECT " +
-                "CLOSEDCASH.HOST, " +
-                "CLOSEDCASH.MONEY, " +
-                "CLOSEDCASH.DATEEND, " +
-                "PRODUCTS.REFERENCE, " +
                 "PRODUCTS.NAME, " +
                 "SUM(TICKETLINES.UNITS) AS UNITS, " +
-                "SUM(TICKETLINES.UNITS * TICKETLINES.PRICE) AS TOTAL " +
-                "FROM CLOSEDCASH, RECEIPTS, TICKETS, TICKETLINES LEFT OUTER JOIN PRODUCTS ON TICKETLINES.PRODUCT = PRODUCTS.ID " +
+                "SUM(TICKETLINES.UNITS * TICKETLINES.PRICE) AS TOTAL, " +
+				"SUM(TICKETLINES.UNITS * TICKETLINES.PRICE) * (1+TAXES.RATE) AS TOTALINCVAT " +
+                "FROM RECEIPTS,  TICKETLINES LEFT OUTER JOIN PRODUCTS ON TICKETLINES.PRODUCT = PRODUCTS.ID " +
+				"LEFT JOIN TICKETS ON TICKETS.ID = TICKETLINES.TICKET " +
+				"LEFT OUTER JOIN TAXES ON TAXES.ID = TICKETLINES.TAXID " +
 				"LEFT JOIN BARCODE_TABLE ON PRODUCTS.ID = BARCODE_TABLE.PID " +
-                "WHERE CLOSEDCASH.MONEY = RECEIPTS.MONEY AND RECEIPTS.ID = TICKETS.ID AND TICKETS.ID = TICKETLINES.TICKET AND ?(QBF_FILTER) " +
-                "GROUP BY CLOSEDCASH.HOST, CLOSEDCASH.MONEY, CLOSEDCASH.DATEEND, PRODUCTS.REFERENCE, PRODUCTS.NAME " +
-                "ORDER BY PRODUCTS.NAME, CLOSEDCASH.HOST, CLOSEDCASH.DATEEND");
-report.addParameter("CLOSEDCASH.DATEEND");
-report.addParameter("CLOSEDCASH.DATEEND");
+                "WHERE RECEIPTS.ID = TICKETS.ID AND TICKETS.ID = TICKETLINES.TICKET AND ?(QBF_FILTER) " +
+                "GROUP BY PRODUCTS.NAME " +
+                "ORDER BY PRODUCTS.NAME");
+report.addParameter("RECEIPTS.DATENEW");
+report.addParameter("RECEIPTS.DATENEW");
 report.addQBFFilter(new com.openbravo.pos.reports.JParamsDatesInterval());
+
 report.addParameter("PRODUCTS.NAME");
 report.addParameter("PRODUCTS.PRICEBUY");
 report.addParameter("PRODUCTS.PRICESELL");
@@ -46,13 +46,17 @@ report.addParameter("PRODUCTS.CATEGORY");
 report.addParameter("PRODUCTS.CODE");
 report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter());
 
-report.addField("HOST", com.openbravo.data.loader.Datas.STRING);
-report.addField("MONEY", com.openbravo.data.loader.Datas.STRING);
-report.addField("DATEEND", com.openbravo.data.loader.Datas.TIMESTAMP);
-report.addField("REFERENCE", com.openbravo.data.loader.Datas.STRING);
 report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+
+
+
 report.addField("UNITS", com.openbravo.data.loader.Datas.DOUBLE);
 report.addField("TOTAL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TOTALINCVAT", com.openbravo.data.loader.Datas.DOUBLE);
+
+
+
+
 
 report;
 
