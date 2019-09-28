@@ -94,7 +94,8 @@
                debug="${javac.debug}"
                deprecation="${javac.deprecation}"
                optimize="${javac.optimize}"
-               target="${javac.minVMVersion}">
+               target="${javac.minVMVersion}"
+               source="${javac.minVMVersion}">
         </javac>
         <copy todir="${dest.classes}/beans">
             <fileset dir="${src.beans}">
@@ -113,7 +114,8 @@
                debug="${javac.debug}"
                deprecation="${javac.deprecation}"
                optimize="${javac.optimize}"
-               target="${javac.minVMVersion}">
+               target="${javac.minVMVersion}"
+               source="${javac.minVMVersion}">
             <classpath>
                 <pathelement location="${dest.classes}/beans"/>
             </classpath>
@@ -135,7 +137,8 @@
                debug="${javac.debug}"
                deprecation="${javac.deprecation}"
                optimize="${javac.optimize}"
-               target="${javac.minVMVersion}">
+               target="${javac.minVMVersion}"
+               source="${javac.minVMVersion}">
             <classpath>
                   <fileset dir="${basedir}/lib">
                     <include name="**/*.jar"/>
@@ -161,7 +164,8 @@
                debug="${javac.debug}"
                deprecation="${javac.deprecation}"
                optimize="${javac.optimize}"
-               target="${javac.minVMVersion}">
+               target="${javac.minVMVersion}"
+               source="${javac.minVMVersion}">
             <classpath>
                   <fileset dir="${basedir}/lib">
                     <include name="**/*.jar"/>
@@ -275,7 +279,8 @@
                debug="${javac.debug}"
                deprecation="${javac.deprecation}"
                optimize="${javac.optimize}"
-               target="${javac.minVMVersion}">
+               target="${javac.minVMVersion}"
+               source="${javac.minVMVersion}">
             <classpath>
                 <fileset dir="${src.web}/WEB-INF/lib">
                     <include name="**/*.jar"/>
