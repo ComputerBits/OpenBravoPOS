@@ -3,6 +3,10 @@ package com.openbravo.pos.inventory;
 import java.sql.*;
 import javax.swing.*;
 
+import com.openbravo.data.loader.Session;
+import com.openbravo.pos.forms.AppConfig;
+import com.openbravo.pos.forms.AppViewConnection;
+
 public class SQLQueryer {
 	Connection conn = null;
 	Statement stmt = null;
@@ -12,11 +16,14 @@ public class SQLQueryer {
 		conn = null;
 		stmt = null;
 		rs = null;
+
+		AppConfig config = new AppConfig(new String[0]);
+		config.load();
 		
 		try{
-			conn = DriverManager.getConnection("jdbc:mysql://zeus:3306/sales", 
-				      	"sales","sa1es");
-            stmt= conn.createStatement();
+            Session s = AppViewConnection.createSession(config);
+
+            stmt= s.getConnection().createStatement();
             
             rs= stmt.executeQuery(query);
             
