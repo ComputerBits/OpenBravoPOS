@@ -12,7 +12,7 @@ public class SQLQueryer {
 	Statement stmt = null;
 	ResultSet rs = null;
 	
-	public SQLQueryer(String query){
+	public SQLQueryer(String query) {
 		conn = null;
 		stmt = null;
 		rs = null;
@@ -20,42 +20,29 @@ public class SQLQueryer {
 		AppConfig config = new AppConfig(new String[0]);
 		config.load();
 		
-		try{
-            Session s = AppViewConnection.createSession(config);
+		try {
+			Session s = AppViewConnection.createSession(config);
 
-            stmt= s.getConnection().createStatement();
-            
-            rs= stmt.executeQuery(query);
-            
-            ResultSetMetaData rsmd = rs.getMetaData();
-            
-            rs.last();
-            int length = rs.getRow();
-            rs.beforeFirst();
-   
-            if(length > 1){
-            	JOptionPane.showMessageDialog(null,"ERROR:SQL query yielded more than one result");
-            }
-            rs.next();
-            /*
-            while(rs.next()){
-	            for(int n= 1 ; n <= length; n++){
-	            	System.out.print(rs.getString(n));
-	            }	
-	      		System.out.println();		
-            }	
-            */
-            
-
+			stmt= s.getConnection().createStatement();
 			
+			rs= stmt.executeQuery(query);
+			
+			ResultSetMetaData rsmd = rs.getMetaData();
+			
+			rs.last();
+			int length = rs.getRow();
+			rs.beforeFirst();
+   
+			if(length > 1){
+				JOptionPane.showMessageDialog(null,"ERROR:SQL query yielded more than one result");
+			}
+			rs.next();			
 		}
-		catch(Exception e){
+		catch(Exception e) {
 			e.printStackTrace();
 		}	
 	}
-	public String getAttribute(String attr) throws SQLException{
+	public String getAttribute(String attr) throws SQLException {
 		return rs.getString(attr);
-		
 	}
-	
 }
