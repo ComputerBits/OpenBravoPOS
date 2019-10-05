@@ -94,8 +94,14 @@
                debug="${javac.debug}"
                deprecation="${javac.deprecation}"
                optimize="${javac.optimize}"
+               includeantruntime="false"
                target="${javac.minVMVersion}"
                source="${javac.minVMVersion}">
+            <bootclasspath>
+                <pathelement location="jre-lib/jre-7-rt.jar"/>
+                <pathelement location="jre-lib/jre-7-jce.jar"/>
+                <pathelement location="jre-lib/jre-7-jsse.jar"/>
+            </bootclasspath>
         </javac>
         <copy todir="${dest.classes}/beans">
             <fileset dir="${src.beans}">
@@ -114,8 +120,14 @@
                debug="${javac.debug}"
                deprecation="${javac.deprecation}"
                optimize="${javac.optimize}"
+               includeantruntime="false"
                target="${javac.minVMVersion}"
                source="${javac.minVMVersion}">
+            <bootclasspath>
+                <pathelement location="jre-lib/jre-7-rt.jar"/>
+                <pathelement location="jre-lib/jre-7-jce.jar"/>
+                <pathelement location="jre-lib/jre-7-jsse.jar"/>
+            </bootclasspath>
             <classpath>
                 <pathelement location="${dest.classes}/beans"/>
             </classpath>
@@ -137,8 +149,14 @@
                debug="${javac.debug}"
                deprecation="${javac.deprecation}"
                optimize="${javac.optimize}"
+               includeantruntime="false"
                target="${javac.minVMVersion}"
                source="${javac.minVMVersion}">
+            <bootclasspath>
+                <pathelement location="jre-lib/jre-7-rt.jar"/>
+                <pathelement location="jre-lib/jre-7-jce.jar"/>
+                <pathelement location="jre-lib/jre-7-jsse.jar"/>
+            </bootclasspath>
             <classpath>
                   <fileset dir="${basedir}/lib">
                     <include name="**/*.jar"/>
@@ -164,8 +182,14 @@
                debug="${javac.debug}"
                deprecation="${javac.deprecation}"
                optimize="${javac.optimize}"
+               includeantruntime="false"
                target="${javac.minVMVersion}"
                source="${javac.minVMVersion}">
+            <bootclasspath>
+                <pathelement location="jre-lib/jre-7-rt.jar"/>
+                <pathelement location="jre-lib/jre-7-jce.jar"/>
+                <pathelement location="jre-lib/jre-7-jsse.jar"/>
+            </bootclasspath>
             <classpath>
                   <fileset dir="${basedir}/lib">
                     <include name="**/*.jar"/>
