@@ -52,8 +52,8 @@ CP=$CP:$DIRNAME/lib/wsdl4j-1.5.1.jar
 CP=$CP:$DIRNAME/lib/commons-discovery-0.2.jar
 CP=$CP:$DIRNAME/lib/commons-logging-1.0.4.jar
 
-CP=$CP:$DIRNAME/locales/
-CP=$CP:$DIRNAME/reports/
+CP=$CP:$DIRNAME/locales.jar
+CP=$CP:$DIRNAME/reports.jar
 
 # Select the library folder
 case "`uname -s`" in

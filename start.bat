@@ -53,7 +53,7 @@ set CP=%CP%;"%DIRNAME%lib/wsdl4j-1.5.1.jar"
 set CP=%CP%;"%DIRNAME%lib/commons-discovery-0.2.jar"
 set CP=%CP%;"%DIRNAME%lib/commons-logging-1.0.4.jar"
 
-set CP=%CP%;"%DIRNAME%locales/"
-set CP=%CP%;"%DIRNAME%reports/"
+set CP=%CP%;"%DIRNAME%lib/locales.jar"
+set CP=%CP%;"%DIRNAME%lib/reports.jar"
 
 start /B javaw -cp %CP% -Djava.util.logging.config.file="%DIRNAME%logging.properties" -Djava.library.path="%DIRNAME%lib/Windows/i368-mingw32" -Ddirname.path="%DIRNAME%./" com.openbravo.pos.forms.StartPOS %1

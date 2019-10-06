@@ -357,7 +357,7 @@
     <target name="dist" depends="dist.bin,dist.src,dist.pda" description="Generate the release files">
     </target>
   
-    <target name="dist.bin" depends="init.dist,jar" description="Generate the bin zip file.">
+    <target name="dist.bin" depends="init.dist,jar,jar-reports-and-locales" description="Generate the bin zip file.">
         <mkdir dir="${basedir}/build/zip" />
         <copy file="${basedir}/start.bat" todir="${basedir}/build/zip"/>
         <copy file="${basedir}/configure.bat" todir="${basedir}/build/zip"/>
@@ -367,9 +367,11 @@
         <copy file="${basedir}/README" todir="${basedir}/build/zip"/>
         <copy file="${basedir}/logging.properties" todir="${basedir}/build/zip"/>
         <copy file="${dest.jar}/openbravopos.jar" todir="${basedir}/build/zip"/>
-        <copy todir="${basedir}/build/zip/licensing">
+        <copy file="${dest.jar}/locales.jar" todir="${basedir}/build/zip"/>
+        <copy file="${dest.jar}/reports.jar" todir="${basedir}/build/zip"/>
+        <zip zipfile="${basedir}/build/zip/licenses.zip">
             <fileset dir="${basedir}/licensing"/>
-        </copy>        
+        </zip>
         <copy todir="${basedir}/build/zip/lib">
             <fileset dir="${basedir}/lib"/>
         </copy>
