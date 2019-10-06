@@ -22,36 +22,7 @@
 DIRNAME=`dirname $0`
 
 CP=$DIRNAME/openbravopos.jar
-
-CP=$CP:$DIRNAME/lib/jasperreports-3.1.4.jar
-CP=$CP:$DIRNAME/lib/jcommon-1.0.15.jar
-CP=$CP:$DIRNAME/lib/jfreechart-1.0.12.jar
-CP=$CP:$DIRNAME/lib/jdt-compiler-3.1.1.jar
-CP=$CP:$DIRNAME/lib/commons-beanutils-1.7.jar
-CP=$CP:$DIRNAME/lib/commons-digester-1.7.jar
-CP=$CP:$DIRNAME/lib/iText-2.1.0.jar
-CP=$CP:$DIRNAME/lib/poi-3.2-FINAL-20081019.jar
-CP=$CP:$DIRNAME/lib/barcode4j-light.jar
-CP=$CP:$DIRNAME/lib/commons-codec-1.3.jar
-CP=$CP:$DIRNAME/lib/velocity-1.5.jar
-CP=$CP:$DIRNAME/lib/oro-2.0.8.jar
-CP=$CP:$DIRNAME/lib/commons-collections-3.1.jar
-CP=$CP:$DIRNAME/lib/commons-lang-2.1.jar
-CP=$CP:$DIRNAME/lib/bsh-core-2.0b4.jar
-CP=$CP:$DIRNAME/lib/RXTXcomm.jar
-CP=$CP:$DIRNAME/lib/jpos1121.jar
-CP=$CP:$DIRNAME/lib/swingx-0.9.5.jar
-CP=$CP:$DIRNAME/lib/substance.jar
-CP=$CP:$DIRNAME/lib/substance-swingx.jar
-
-# Apache Axis SOAP libraries.
-CP=$CP:$DIRNAME/lib/axis.jar
-CP=$CP:$DIRNAME/lib/jaxrpc.jar
-CP=$CP:$DIRNAME/lib/saaj.jar
-CP=$CP:$DIRNAME/lib/wsdl4j-1.5.1.jar
-CP=$CP:$DIRNAME/lib/commons-discovery-0.2.jar
-CP=$CP:$DIRNAME/lib/commons-logging-1.0.4.jar
-
+CP=$CP:$DIRNAME/lib/*
 CP=$CP:$DIRNAME/locales.jar
 CP=$CP:$DIRNAME/reports.jar
 
