@@ -93,6 +93,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         this.s = s;
     }
 
+    private Session getSession(){
+        return s;
+    }
+
     public final Row getProductsRow() {
         return productsRow;
     }

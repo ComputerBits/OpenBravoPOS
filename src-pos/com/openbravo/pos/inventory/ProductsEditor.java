@@ -45,6 +45,8 @@ import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.sales.TaxesLogic;
 import java.util.Date;
 import java.util.UUID;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  *
@@ -74,9 +76,20 @@ public class ProductsEditor extends JPanel implements EditorRecord {
     
     private boolean reportlock = false;
     
+    public Session session = null;
+
     /** Creates new form JEditProduct */
     public ProductsEditor(DataLogicSales dlSales, DirtyManager dirty) {
         initComponents();
+
+        try {
+            Method method = dlSales.getClass().getDeclaredMethod("getSession", null);
+            method.setAccessible(true);
+            session = Session.class.cast(method.invoke(dlSales));
+        } catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+            // field will always exist, and we override accessibility
+            // if getting session fails, we handle the null later
+        }
 
         loadimage = dlSales.getProductImage();
         

@@ -12,16 +12,17 @@ public class SQLQueryer {
 	Statement stmt = null;
 	ResultSet rs = null;
 	
-	public SQLQueryer(String query) {
+	public SQLQueryer(Session s, String query) {
 		conn = null;
 		stmt = null;
 		rs = null;
 
-		AppConfig config = new AppConfig(new String[0]);
-		config.load();
-		
 		try {
-			Session s = AppViewConnection.createSession(config);
+			if (s == null) {
+				AppConfig config = new AppConfig(new String[0]);
+				config.load();
+				s = AppViewConnection.createSession(config);
+			}
 
 			stmt= s.getConnection().createStatement();
 			

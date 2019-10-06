@@ -178,7 +178,7 @@ public class BFrame extends JFrame {
 	private void lookupDetails(){
 
 		String query = "SELECT * FROM products WHERE code='" + text_barcode.getText() +"'";
-		SQLQueryer sql = new SQLQueryer(query);
+		SQLQueryer sql = new SQLQueryer(pe.session, query);
 		try{
 			label_name_val.setText(sql.getAttribute("NAME"));
 			float price = (new Float(sql.getAttribute("PRICESELL"))) * (1+(new Float(text_tax.getText()))/100);
