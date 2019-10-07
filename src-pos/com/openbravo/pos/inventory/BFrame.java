@@ -40,7 +40,7 @@ public class BFrame extends JFrame {
 		text_y = new JTextField();
 		text_barcode = new JTextField();
 		text_leftMargin = new JTextField();
-		text_tax = new JTextField("15");
+		text_tax = new JTextField("20");
 
 		spinner_copies = new JSpinner(snm);
 
