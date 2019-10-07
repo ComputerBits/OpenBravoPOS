@@ -593,8 +593,8 @@ public class ProductsEditor extends JPanel implements EditorRecord {
         m_jTitle = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JButton();
-        genCode = new javax.swing.JButton("Generate/Print Code");
+        jLabel6 = new javax.swing.JButton("More");
+        genCode = new javax.swing.JButton("Print");
         m_jCode = new javax.swing.JTextField();
         m_jImage = new com.openbravo.data.gui.JImageEditor();
         jLabel3 = new javax.swing.JLabel();
@@ -806,7 +806,6 @@ public class ProductsEditor extends JPanel implements EditorRecord {
 
         jPanel1.setLayout(null);
 
-        jLabel6.setText("Barcodes"); // NOI18N
         jPanel1.add(jLabel6);
         jPanel1.add(genCode);
         genCode.setBounds(85, 20, 75, 25);
