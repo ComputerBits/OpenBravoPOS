@@ -22,9 +22,9 @@
 DIRNAME=`dirname $0`
 
 CP=$DIRNAME/openbravopos.jar
-
-CP=$CP:$DIRNAME/locales/
-CP=$CP:$DIRNAME/lib/substance.jar
+CP=$CP:$DIRNAME/locales.jar
+CP=$CP:$DIRNAME/lib/*
+CP=$CP:$DIRNAME/lib.jar
 
 
 java -cp $CP -Djava.util.logging.config.file=$DIRNAME/logging.properties -Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel com.openbravo.pos.config.JFrmConfig

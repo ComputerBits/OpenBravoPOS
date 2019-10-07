@@ -22,8 +22,8 @@ REM    along with Openbravo POS.  If not, see <http://www.gnu.org/licenses/>.
 set DIRNAME=%~dp0
 
 set CP="%DIRNAME%openbravopos.jar"
-
-set CP=%CP%;"%DIRNAME%locales/"
-set CP=%CP%;"%DIRNAME%lib/substance.jar"
+set CP=%CP%;"%DIRNAME%locales.jar"
+set CP=%CP%;"%DIRNAME%lib/*"
+set CP=%CP%;"%DIRNAME%lib.jar"
 
 start /B javaw -cp %CP% -Djava.util.logging.config.file="%DIRNAME%logging.properties" com.openbravo.pos.config.JFrmConfig
