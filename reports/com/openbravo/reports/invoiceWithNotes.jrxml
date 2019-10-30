@@ -19,7 +19,7 @@
 		<band height="117">
 			<image>
 				<reportElement key="image-1" x="68" y="0" width="460" height="96"/>
-				<imageExpression class="java.lang.String"><![CDATA["reports/com/openbravo/reports/logo.gif"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA["com/openbravo/reports/logo.gif"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="97" y="81" width="85" height="13"/>
