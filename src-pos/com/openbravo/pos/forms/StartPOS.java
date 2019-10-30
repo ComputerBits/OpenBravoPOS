@@ -21,6 +21,7 @@ package com.openbravo.pos.forms;
 
 import java.util.Locale;
 import javax.swing.UIManager;
+import com.openbravo.pos.config.JFrmConfig;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.instance.InstanceQuery;
 import java.util.logging.Level;
@@ -56,7 +57,14 @@ public class StartPOS {
     }
     
     public static void main (final String args[]) {
-        
+        if (args.length > 0 && args[0].equals("configure")) {
+            String[] newArgs = new String[args.length - 1];
+            for (int i = 1, k = 0; i < args.length; i++) {
+                newArgs[k++] = args[i];
+            }
+            JFrmConfig.main(newArgs);
+            return;
+        }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 
