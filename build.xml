@@ -56,8 +56,12 @@
     <!-- where the installers go -->
     <property name="dest.installer.pos" value="${basedir}/build/installerpos"/>
     <property name="dest.installer.pda" value="${basedir}/build/installerpda"/>
+    <property name="launch4j.dir" location="${basedir}/launch4j/launch4j-3.12-win32" />
 
-    <property name="dontbundle" value="swingx*.jar,jasperreports*.jar,bsh-core*.jar,substance.jar,mysql*.jar,hsqldb.jar" />
+    <taskdef name="launch4j"
+        classname="net.sf.launch4j.ant.Launch4jTask"
+        classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar"
+    />
 
     <!-- ================================================================= -->
     <!-- I N I T                                                           -->
@@ -616,32 +620,27 @@
     <target name="jar-lib" description="Make all-in-one library file.">
         <mkdir dir="${dest.jar}" />
         <zip zipfile="${dest.jar}/lib.jar">
-            <zipgroupfileset dir="${lib}" includes="*.jar" excludes="${dontbundle}" />
+            <zipgroupfileset dir="${lib}" includes="*.jar" />
         </zip>
     </target>
 
-    <target name="cbits" depends="init.dist,jar,jar-reports-and-locales,jar-lib" description="Generate the bin zip file.">
-        <mkdir dir="${basedir}/build/zip" />
-        <copy file="${basedir}/start.bat" todir="${basedir}/build/zip"/>
-        <copy file="${basedir}/configure.bat" todir="${basedir}/build/zip"/>
-        <copy file="${basedir}/start.sh" todir="${basedir}/build/zip"/>
-        <copy file="${basedir}/configure.sh" todir="${basedir}/build/zip"/>
-        <copy file="${basedir}/openbravo-logo-128.png" todir="${basedir}/build/zip"/>
-        <copy file="${basedir}/README" todir="${basedir}/build/zip"/>
-        <copy file="${basedir}/logging.properties" todir="${basedir}/build/zip"/>
-        <copy file="${dest.jar}/openbravopos.jar" todir="${basedir}/build/zip"/>
-        <copy file="${dest.jar}/locales.jar" todir="${basedir}/build/zip"/>
-        <copy file="${dest.jar}/reports.jar" todir="${basedir}/build/zip"/>
-        <copy file="${dest.jar}/lib.jar" todir="${basedir}/build/zip"/>
-        <copy todir="${basedir}/build/zip/lib">
-            <fileset dir="${lib}/" includes="${dontbundle}"/>
-        </copy>
-        <zip zipfile="${basedir}/build/zip/licenses.zip">
-            <fileset dir="${basedir}/licensing"/>
+    <target name="cbits" depends="jar,jar-reports-and-locales,jar-lib" description="Generate the all-in-one exe">
+        <delete dir="${basedir}/cbits"/>
+    	<mkdir dir="${basedir}/build/cbits/" />
+        <zip file="${dest.jar}/openbravopos-complete.jar">
+            <zipgroupfileset file="${dest.jar}/locales.jar"/>
+            <zipgroupfileset file="${dest.jar}/reports.jar"/>
+            <zipgroupfileset file="${dest.jar}/lib.jar"/>
+            <zipgroupfileset file="${dest.jar}/openbravopos.jar"/>
         </zip>
-        <mkdir dir="${dest.dist}" />
-        <zip zipfile="${dest.dist}/${name}_${version}_bin.zip" basedir="${basedir}/build/zip" />
-        <delete dir="${basedir}/build/zip" />
+        <launch4j configFile="${basedir}/launch4j.xml"
+            jarPath="${dest.jar}/openbravopos-complete.jar"
+            outFile="${basedir}/build/cbits/${name}.exe"
+        />
+        <launch4j configFile="${basedir}/launch4j_console.xml"
+            jarPath="${dest.jar}/openbravopos-complete.jar"
+            outFile="${basedir}/build/cbits/${name}_debug.exe"
+        />
     </target>
 
 </project>
