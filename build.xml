@@ -56,12 +56,20 @@
     <!-- where the installers go -->
     <property name="dest.installer.pos" value="${basedir}/build/installerpos"/>
     <property name="dest.installer.pda" value="${basedir}/build/installerpda"/>
-    <property name="launch4j.dir" location="${basedir}/launch4j/launch4j-3.12-win32" />
 
-    <taskdef name="launch4j"
-        classname="net.sf.launch4j.ant.Launch4jTask"
-        classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar"
-    />
+    <condition property="isUnix">
+        <os family="unix" />
+    </condition>
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
+
+    <target name="launch4j.setWindowsDir" if="isWindows">
+        <property name="launch4j.dir" location="${basedir}/launch4j/launch4j-3.12-win32" />
+    </target>
+    <target name="launch4j.setUnixDir" if="isUnix">
+        <property name="launch4j.dir" location="${basedir}/launch4j/launch4j-3.12-linux" />
+    </target>
 
     <!-- ================================================================= -->
     <!-- I N I T                                                           -->
@@ -624,15 +632,29 @@
         </zip>
     </target>
 
-    <target name="cbits" depends="jar,jar-reports-and-locales,jar-lib" description="Generate the all-in-one exe">
-        <delete dir="${basedir}/cbits"/>
-    	<mkdir dir="${basedir}/build/cbits/" />
-        <zip file="${dest.jar}/openbravopos-complete.jar">
+    <target name="aio-jar" depends="jar,jar-reports-and-locales,jar-lib" description="Make an all-in-one executable jar">
+        <jar destfile="${dest.jar}/openbravopos-complete.jar">
             <zipgroupfileset file="${dest.jar}/locales.jar"/>
             <zipgroupfileset file="${dest.jar}/reports.jar"/>
             <zipgroupfileset file="${dest.jar}/lib.jar"/>
             <zipgroupfileset file="${dest.jar}/openbravopos.jar"/>
-        </zip>
+            <manifest>
+                <attribute name="Implementation-Vendor" value="Openbravo SL"/>
+                <attribute name="Implementation-Title" value="Openbravo Network POS"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+                <attribute name="Main-Class" value="com.openbravo.pos.forms.StartPOS" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="cbits" depends="launch4j.setWindowsDir,launch4j.setUnixDir,aio-jar" description="Generate the all-in-one exe">
+        <taskdef name="launch4j"
+            classname="net.sf.launch4j.ant.Launch4jTask"
+            classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar"
+        />
+        <echo message="${launch4j.dir}" />
+        <delete dir="${basedir}/cbits"/>
+    	<mkdir dir="${basedir}/build/cbits/" />
         <launch4j configFile="${basedir}/launch4j.xml"
             jarPath="${dest.jar}/openbravopos-complete.jar"
             outFile="${basedir}/build/cbits/${name}.exe"
