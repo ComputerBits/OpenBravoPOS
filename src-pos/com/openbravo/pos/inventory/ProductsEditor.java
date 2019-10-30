@@ -83,7 +83,7 @@ public class ProductsEditor extends JPanel implements EditorRecord {
         initComponents();
 
         try {
-            Method method = dlSales.getClass().getDeclaredMethod("getSession", null);
+            Method method = dlSales.getClass().getDeclaredMethod("getSession");
             method.setAccessible(true);
             session = Session.class.cast(method.invoke(dlSales));
         } catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
