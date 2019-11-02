@@ -177,7 +177,8 @@ public class BFrame extends JFrame {
 	}
 	private void lookupDetails(){
 
-		String query = "SELECT * FROM products WHERE code='" + text_barcode.getText() +"'";
+		String REGEX = "0{0,2}"+text_barcode.getText()+"{0,1}";
+		String query = "SELECT * FROM products, barcode_table WHERE products.code REGEXP '"+REGEX+"' OR (barcode_table.pid=products.id and barcode_table.code REGEXP '"+REGEX+"') GROUP BY products.id";
 		SQLQueryer sql = new SQLQueryer(pe.session, query);
 		try{
 			label_name_val.setText(sql.getAttribute("NAME"));

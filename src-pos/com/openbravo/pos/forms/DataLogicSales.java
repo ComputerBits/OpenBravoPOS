@@ -110,9 +110,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             , ProductInfoExt.getSerializerRead()).find(id);
     }
     public final ProductInfoExt getProductInfoByCode(String sCode) throws BasicException {
+        String REGEX = "0{0,2}"+sCode+"{0,1}";
         return (ProductInfoExt) new PreparedSentence(s
             , "SELECT ID, REFERENCE, PRODUCTS.CODE, NAME, ISCOM, ISSCALE, PRICEBUY, PRICESELL, TAXCAT, CATEGORY, ATTRIBUTESET_ID, IMAGE, ATTRIBUTES " +
-              "FROM PRODUCTS, BARCODE_TABLE WHERE (PRODUCTS.ID = BARCODE_TABLE.PID AND BARCODE_TABLE.CODE = ?) OR PRODUCTS.CODE = '" + sCode + "'"
+              "FROM PRODUCTS, BARCODE_TABLE WHERE PRODUCTS.CODE = ? OR PRODUCTS.CODE REGEXP '"+REGEX+"' OR (PRODUCTS.ID = BARCODE_TABLE.PID AND (BARCODE_TABLE.CODE REGEXP '"+REGEX+"')) GROUP BY PRODUCTS.ID"
             , SerializerWriteString.INSTANCE
             , ProductInfoExt.getSerializerRead()).find(sCode);
     }

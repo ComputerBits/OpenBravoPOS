@@ -38,8 +38,10 @@ public abstract class QBFCompareEnum {
         public String getExpression(String sField, String sSQLValue) { return sField + " LIKE " + sSQLValue; }
     };
     public final static QBFCompareEnum COMP_BLOOKUP = new QBFCompareEnum(9, "qbf.blookup") {
-        public String getExpression(String sField, String sSQLValue) { return sField + " LIKE " + sSQLValue +
-            " OR (BARCODE_TABLE.PID = PRODUCTS.ID AND BARCODE_TABLE.CODE LIKE " + sSQLValue +")";}
+        public String getExpression(String sField, String sSQLValue) {
+            String REGEX = "0{0,2}"+sSQLValue+"{0,1}";
+            return sField + " REGEXP '" + REGEX + "'" +
+            " OR (BARCODE_TABLE.PID = PRODUCTS.ID AND BARCODE_TABLE.CODE REGEXP '" + REGEX + "')";}
     };
     public final static QBFCompareEnum COMP_EQUALS = new QBFCompareEnum(3, "qbf.equals") {
         public String getExpression(String sField, String sSQLValue) { return sField + " = " + sSQLValue; }

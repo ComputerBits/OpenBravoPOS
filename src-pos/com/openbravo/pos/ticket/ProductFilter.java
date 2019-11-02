@@ -95,7 +95,7 @@ public class ProductFilter extends javax.swing.JPanel implements ReportEditorCre
                 QBFCompareEnum.COMP_NONE, null,
                 QBFCompareEnum.COMP_NONE, null,
                 QBFCompareEnum.COMP_NONE, null,
-                QBFCompareEnum.COMP_BLOOKUP, "%" + m_jBarcode.getText() + "%"
+                QBFCompareEnum.COMP_BLOOKUP, m_jBarcode.getText()
             };
         }
     } 
