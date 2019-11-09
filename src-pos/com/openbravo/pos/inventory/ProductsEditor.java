@@ -687,7 +687,7 @@ public class ProductsEditor extends JPanel implements EditorRecord {
                                             while(rs.next()){
                                                 code = rs.getString(1);
                                                 for(int n = 0; n < num; n++){
-                                                    Matcher m = Pattern.compile("0{0,2}"+fields[n].getText()+"{0,1}").matcher(fields[n].getText());
+                                                    Matcher m = Pattern.compile("0{0,2}"+fields[n].getText()+"{0,1}").matcher(code);
                                                     if(m.matches()){
                                                         javax.swing.JOptionPane.showMessageDialog(null,code + " is a duplicate. It is already assigned to '" + rs.getString(2) + "'");
                                                         return;
@@ -703,7 +703,7 @@ public class ProductsEditor extends JPanel implements EditorRecord {
                                             while(rs.next()){
                                                 code = rs.getString(1);
                                                 for(int n = 0; n < num; n++){
-                                                    Matcher m = Pattern.compile("0{0,2}"+fields[n].getText()+"{0,1}").matcher(fields[n].getText());
+                                                    Matcher m = Pattern.compile("0{0,2}"+fields[n].getText()+"{0,1}").matcher(code);
                                                     if(m.matches()){
                                                         javax.swing.JOptionPane.showMessageDialog(null,code + " is a duplicate. It is already assigned to '" + rs.getString(2) + "'");
                                                         return;
