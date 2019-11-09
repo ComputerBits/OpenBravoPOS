@@ -33,6 +33,7 @@ public class CustomerInfo implements Serializable {
     protected String searchkey;
     protected String taxid;
     protected String name;
+    protected String address;
     
     /** Creates a new instance of UserInfoBasic */
     public CustomerInfo(String id) {
@@ -40,6 +41,7 @@ public class CustomerInfo implements Serializable {
         this.searchkey = null;
         this.taxid = null;
         this.name = null;
+        this.address = null;
     }
     
     public String getId() {
@@ -70,6 +72,14 @@ public class CustomerInfo implements Serializable {
         this.name = name;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String printTaxid() {
         return StringUtils.encodeXML(taxid);
     }
@@ -80,7 +90,7 @@ public class CustomerInfo implements Serializable {
     
     @Override
     public String toString() {
-        return getName();
+        return getName() + " (" + getAddress() + ")";
     }    
 }
 

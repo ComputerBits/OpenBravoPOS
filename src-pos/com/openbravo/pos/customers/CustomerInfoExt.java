@@ -42,7 +42,6 @@ public class CustomerInfoExt extends CustomerInfo {
     protected String phone;
     protected String phone2;
     protected String fax;
-    protected String address;
     protected String address2;
     protected String postal;
     protected String city;
@@ -181,14 +180,6 @@ public class CustomerInfoExt extends CustomerInfo {
 
     public void setFax(String fax) {
         this.fax = fax;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getAddress2() {

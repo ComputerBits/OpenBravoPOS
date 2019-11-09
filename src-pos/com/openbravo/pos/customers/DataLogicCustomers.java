@@ -79,7 +79,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
     // CustomerList list
     public SentenceList getCustomerList() {
         return new StaticSentence(s
-            , new QBFBuilder("SELECT ID, TAXID, SEARCHKEY, NAME FROM CUSTOMERS WHERE VISIBLE = " + s.DB.TRUE() + " AND ?(QBF_FILTER) ORDER BY NAME", new String[] {"TAXID", "SEARCHKEY", "NAME"})
+            , new QBFBuilder("SELECT ID, TAXID, SEARCHKEY, NAME, ADDRESS FROM CUSTOMERS WHERE VISIBLE = " + s.DB.TRUE() + " AND ?(QBF_FILTER) ORDER BY NAME", new String[] {"TAXID", "SEARCHKEY", "NAME"})
             , new SerializerWriteBasic(new Datas[] {Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.STRING})
             , new SerializerRead() {
                     public Object readValues(DataRead dr) throws BasicException {
@@ -87,6 +87,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
                         c.setTaxid(dr.getString(2));
                         c.setSearchkey(dr.getString(3));
                         c.setName(dr.getString(4));
+                        c.setAddress(dr.getString(5));
                         return c;
                     }                
                 });
