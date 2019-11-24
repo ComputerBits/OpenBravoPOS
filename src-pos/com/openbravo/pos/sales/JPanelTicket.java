@@ -1027,44 +1027,21 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     }
         
     public void evalScriptAndRefresh(String resource, ScriptArg... args) {
-        // this method is intended to be called only from JPanelButtons.
 
         if (resource == null) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotexecute"));
             msg.show(this);            
         } else {
-            try {
-                // calculate taxes
-                taxeslogic.calculateTaxes(m_oTicket);
-                // execute script
-                ScriptObject scr = new ScriptObject(m_oTicket, m_oTicketExt);
-                scr.setSelectedIndex(m_ticketlines.getSelectedIndex());
-                evalScript(scr, resource, args);
-                refreshTicket();
-                setSelectedIndex(scr.getSelectedIndex());
-            } catch (TaxesException e) {
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotcalculatetaxes"));
-                msg.show(this);
-            }
+            ScriptObject scr = new ScriptObject(m_oTicket, m_oTicketExt);
+            scr.setSelectedIndex(m_ticketlines.getSelectedIndex());
+            evalScript(scr, resource, args);   
+            refreshTicket();
+            setSelectedIndex(scr.getSelectedIndex());
         }
     }  
     
     public void printTicket(String resource) {
-        // this method is intended to be called only from JPanelButtons.
-
-        if (resource == null) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotexecute"));
-            msg.show(this);
-        } else {
-            try {
-                // calculate taxes
-                taxeslogic.calculateTaxes(m_oTicket);
-                printTicket(resource, m_oTicket, m_oTicketExt);
-            } catch (TaxesException e) {
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotcalculatetaxes"));
-                msg.show(this);
-            }
-        }
+        printTicket(resource, m_oTicket, m_oTicketExt);
     }
     
     private Object executeEventAndRefresh(String eventkey, ScriptArg ... args) {
