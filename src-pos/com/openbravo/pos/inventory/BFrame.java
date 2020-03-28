@@ -149,7 +149,15 @@ public class BFrame extends JFrame {
 					JOptionPane.showMessageDialog(null,"Please enter a barcode and use the 'Lookup' button before printing");
 					return;
 				}
-				Barcodes b = new Barcodes(xco-1,yco-1,label_name_val.getText(),new Float(label_price_val.getText()),usableBarcode);
+				
+				float price = 0;
+				try {
+					price = new Float(label_price_val.getText());
+				} catch (NumberFormatException e) {
+					price = 0;
+				}
+				
+				Barcodes b = new Barcodes(xco-1, yco-1, label_name_val.getText(), price, usableBarcode);
 				b.setLeftMargin(new Float(text_leftMargin.getText()));
 				b.doPrint(snm.getNumber().intValue());
 			}
@@ -185,7 +193,7 @@ public class BFrame extends JFrame {
 			float price = (new Float(sql.getAttribute("PRICESELL"))) * (1+(new Float(text_tax.getText()))/100);
 			price = ((float)((int)(price*100)))/100;
 			if(price < 0.01){
-				label_price_val.setText("-");
+				label_price_val.setText("");
 			}
 			else{
 				label_price_val.setText(String.valueOf(price));

@@ -100,8 +100,11 @@ public class Barcodes  implements Printable{
 							g2d2.translate(-BARCODE_TRANS_XOFFSET,-(BARCODE_TRANS_YOFFSET));
 							
 							//draw price
-							NumberFormat nf = new DecimalFormat("£#0.00");
-							String priceString = nf.format(price);
+							String priceString = "";
+							if (price != 0) {
+								NumberFormat nf = new DecimalFormat("£#0.00");
+								priceString = nf.format(price);
+							}
 							g2d2.drawString(priceString,PRICE_XOFFSET,PRICE_YOFFSET);
 
 							//draw Name
