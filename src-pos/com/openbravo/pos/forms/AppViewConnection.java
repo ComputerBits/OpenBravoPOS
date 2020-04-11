@@ -48,8 +48,11 @@ public class AppViewConnection {
             if (isJavaWebStart()) {
                 Class.forName(props.getProperty("db.driver"), true, Thread.currentThread().getContextClassLoader());
             } else {
-                ClassLoader cloader = new URLClassLoader(new URL[] {new File(props.getProperty("db.driverlib")).toURI().toURL()});
-                DriverManager.registerDriver(new DriverWrapper((Driver) Class.forName(props.getProperty("db.driver"), true, cloader).newInstance()));
+                String driverLib = props.getProperty("db.driverlib");
+                if (driverLib != null) { // If driverlib prop is empty, assume the classes are available and will be loaded by SPI
+                    ClassLoader cloader = new URLClassLoader(new URL[] {new File(driverLib).toURI().toURL()});
+                    DriverManager.registerDriver(new DriverWrapper((Driver) Class.forName(props.getProperty("db.driver"), true, cloader).newInstance()));
+                }
             }
 
             String sDBUser = props.getProperty("db.user");

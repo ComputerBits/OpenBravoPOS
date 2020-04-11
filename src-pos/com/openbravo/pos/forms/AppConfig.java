@@ -140,7 +140,7 @@ public class AppConfig implements AppProperties {
 //        m_propsconfig.setProperty("db.user", "sa");
 //        m_propsconfig.setProperty("db.password", "");
         
-        m_propsconfig.setProperty("db.driver", "com.mysql.jdbc.Driver");
+        m_propsconfig.setProperty("db.driver", "com.mysql.cj.jdbc.Driver");
         m_propsconfig.setProperty("db.URL", "jdbc:mysql://kronos:3306/sales");
         m_propsconfig.setProperty("db.user", "sales");         
         m_propsconfig.setProperty("db.password", "");
