@@ -102,7 +102,7 @@ public class Barcodes  implements Printable{
 							//draw price
 							String priceString = "";
 							if (price != 0) {
-								NumberFormat nf = new DecimalFormat("£#0.00");
+								NumberFormat nf = new DecimalFormat("\u00a3#0.00");
 								priceString = nf.format(price);
 							}
 							g2d2.drawString(priceString,PRICE_XOFFSET,PRICE_YOFFSET);
