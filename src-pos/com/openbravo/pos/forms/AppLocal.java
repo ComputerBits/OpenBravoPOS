@@ -19,6 +19,10 @@
 
 package com.openbravo.pos.forms;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import com.openbravo.beans.LocaleResources;
 
 /**
@@ -27,9 +31,10 @@ import com.openbravo.beans.LocaleResources;
  */
 public class AppLocal {
     
-    public static final String APP_NAME = "Openbravo POS";
+    public static final String APP_NAME = "OpenBravoPOS";
     public static final String APP_ID = "openbravopos";
-    public static final String APP_VERSION = "2.30.2";
+    public static final String APP_VERSION;
+    public static final String GIT_REVISION;
   
     // private static List<ResourceBundle> m_messages;
     private static LocaleResources m_resources;
@@ -38,6 +43,14 @@ public class AppLocal {
         m_resources = new LocaleResources();
         m_resources.addBundleName("pos_messages");
         m_resources.addBundleName("erp_messages");
+        Properties versionProps = new Properties();
+        try {
+			versionProps.load(AppLocal.class.getClassLoader().getResourceAsStream("version.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        APP_VERSION = versionProps.getProperty("APP_VERSION", "0.0.0");
+        GIT_REVISION = versionProps.getProperty("GIT_REVISION", "r0");
     }
     
     /** Creates a new instance of AppLocal */
@@ -50,5 +63,9 @@ public class AppLocal {
     
     public static String getIntString(String sKey, Object ... sValues) {
         return m_resources.getString(sKey, sValues);
+    }
+    
+    public static String getBaseTitle() {
+    	return AppLocal.APP_NAME + " - " + AppLocal.APP_VERSION + " - " + AppLocal.GIT_REVISION;
     }
 }

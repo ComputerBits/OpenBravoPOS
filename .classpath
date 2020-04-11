@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src-beans"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="src-data"/>
 	<classpathentry kind="src" path="src-pos"/>
 	<classpathentry kind="src" path="src-erp"/>

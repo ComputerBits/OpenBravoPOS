@@ -45,6 +45,8 @@
     <property name="src.web" value="${basedir}/web"/>
     <property name="jetty.lib" value="${basedir}/jetty/lib"/>
     <property name="lib" value="${basedir}/lib"/>
+    <property name="src.res" value="${basedir}/resources"/>
+    <property name="dest.res" value="${basedir}/build/resources"/>
 
     <!-- the jar directory -->
     <property name="dest.jar" value="${basedir}/build/jar"/>
@@ -74,6 +76,10 @@
     <!-- ================================================================= -->
     <!-- I N I T                                                           -->
     <!-- ================================================================= -->
+    <target name="init.res">
+        <delete dir="${dest.res}" />
+    </target>
+
     <target name="init.classes">
         <delete dir="${dest.classes}" />
     </target>
@@ -223,12 +229,40 @@
             </fileset>
         </copy>                
     </target>
+	
+	<available file=".git" type="dir" property="git.present"/>
+
+    <target name="git.revision" description="Store git rev count in ${git_rev}" if="git.present">
+        <exec executable="git" outputproperty="git_rev" failifexecutionfails="false" errorproperty="">
+            <arg value="rev-list"/>
+            <arg value="--count"/>
+            <arg value="HEAD"/>
+        </exec>
+        <condition property="git_rev" value="${git.revision}" else="0">
+            <and>
+                <isset property="git.revision"/>
+                <length string="${git.revision}" trim="yes" length="0" when="greater"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="version" depends="init.res,git.revision" description="Generate version.properties">
+        <mkdir dir="${dest.res}" />
+        <copy file="${src.res}/version.properties" tofile="${dest.res}/version.properties">
+            <filterchain>
+                <replacetokens>
+                    <token key="APP_VERSION" value="${version}" />
+                    <token key="GIT_REVISION" value="${git_rev}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+    </target>
 
     <!-- ================================================================= -->
     <!-- J A R                           				   -->
     <!-- ================================================================= -->
 
-    <target name="jar" depends="init.jar,compilebeans,compiledata,compilepos,compileerp" description="Generate the .jar file.">
+    <target name="jar" depends="init.jar,compilebeans,compiledata,compilepos,compileerp,version" description="Generate the .jar file.">
 
         <mkdir dir="${basedir}/build/zip" />
 
@@ -237,6 +271,7 @@
             <fileset dir="${dest.classes}/data"/>
             <fileset dir="${dest.classes}/pos"/>
             <fileset dir="${dest.classes}/erp"/>
+            <fileset dir="${dest.res}"/>
         </copy>  
         <mkdir dir="${dest.jar}" />
         <jar jarfile="${dest.jar}/openbravopos.jar"
