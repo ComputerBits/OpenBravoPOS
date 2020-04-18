@@ -98,6 +98,7 @@ public class JTicketsBagTicket extends JTicketsBag {
         m_jEdit.setVisible(m_App.getAppUserView().getUser().hasPermission("sales.EditTicket"));
         m_jRefund.setVisible(m_App.getAppUserView().getUser().hasPermission("sales.RefundTicket"));
         m_jPrint.setVisible(m_App.getAppUserView().getUser().hasPermission("sales.PrintTicket"));
+        m_jReprint.setVisible(m_App.getAppUserView().getUser().hasPermission("sales.PrintTicket"));
              
         // postcondicion es que tenemos ticket activado aqui y ticket en el panel
     }
@@ -188,6 +189,7 @@ public class JTicketsBagTicket extends JTicketsBag {
         }
         m_jRefund.setEnabled(m_ticket != null && m_ticket.getTicketType() == TicketInfo.RECEIPT_NORMAL);
         m_jPrint.setEnabled(m_ticket != null);
+        m_jReprint.setEnabled(m_ticket != null);
         
         // Este deviceticket solo tiene una impresora, la de pantalla
         m_TP.getDevicePrinter("1").reset();
@@ -228,6 +230,7 @@ public class JTicketsBagTicket extends JTicketsBag {
         m_jEdit = new javax.swing.JButton();
         m_jRefund = new javax.swing.JButton();
         m_jPrint = new javax.swing.JButton();
+        m_jReprint = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         m_jPanelTicket = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
@@ -305,6 +308,19 @@ public class JTicketsBagTicket extends JTicketsBag {
             }
         });
         m_jButtons.add(m_jPrint);
+
+        m_jReprint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/yast_printer.png"))); // NOI18N
+        m_jReprint.setText(AppLocal.getIntString("button.reprint")); // NOI18N
+        m_jReprint.setFocusPainted(false);
+        m_jReprint.setFocusable(false);
+        m_jReprint.setMargin(new java.awt.Insets(8, 14, 8, 14));
+        m_jReprint.setRequestFocusEnabled(false);
+        m_jReprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_jReprintActionPerformed(evt);
+            }
+        });
+        m_jButtons.add(m_jReprint);
 
         m_jOptions.add(m_jButtons, java.awt.BorderLayout.WEST);
 
@@ -402,6 +418,41 @@ public class JTicketsBagTicket extends JTicketsBag {
         
     }//GEN-LAST:event_m_jPrintActionPerformed
 
+    private void m_jReprintActionPerformed(java.awt.event.ActionEvent evt) {
+        if (m_ticket != null) {
+            try {
+                String resourceFile = "/com/openbravo/reports/invoiceWithNotes";
+                JasperReport jr;
+                InputStream in = getClass().getResourceAsStream(resourceFile + ".ser");
+                if (in == null) {
+                    // read and compile the report
+                    JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream(resourceFile + ".jrxml"));
+                    jr = JasperCompileManager.compileReport(jd);
+                } else {
+                    // read the compiled report
+                    ObjectInputStream oin = new ObjectInputStream(in);
+                    jr = (JasperReport) oin.readObject();
+                    oin.close();
+                }
+                Map reportparams = new HashMap();
+                try {
+                    reportparams.put("REPORT_RESOURCE_BUNDLE", ResourceBundle.getBundle(resourceFile + ".properties"));
+                } catch (MissingResourceException e) {
+                }
+                reportparams.put("TAXESLOGIC", null);
+                Map reportfields = new HashMap();
+                reportfields.put("TICKET", m_ticket);
+                reportfields.put("PLACE", null);
+                JasperPrint jp = JasperFillManager.fillReport(jr, reportparams, new JRMapArrayDataSource(new Object[] { reportfields } ));
+                PrintService service = ReportUtils.getPrintService(m_App.getProperties().getProperty("machine.printername"));
+                JRPrinterAWT300.printPages(jp, 0, jp.getPages().size() - 1, service);
+            } catch (Exception e) {
+                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport"), e);
+                msg.show(this);
+            }
+        }
+    }
+
     private void m_jRefundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jRefundActionPerformed
         
         java.util.List aRefundLines = new ArrayList();
@@ -464,6 +515,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JPanel m_jOptions;
     private javax.swing.JPanel m_jPanelTicket;
     private javax.swing.JButton m_jPrint;
+    private javax.swing.JButton m_jReprint;
     private javax.swing.JButton m_jRefund;
     private com.openbravo.editor.JEditorIntegerPositive m_jTicketEditor;
     private javax.swing.JLabel m_jTicketId;
